@@ -1,5 +1,6 @@
 from mycroft import MycroftSkill, intent_file_handler
-import subprocess
+# import subprocess
+import compose_haiku
 
 
 class HaikuCompose(MycroftSkill):
@@ -8,7 +9,7 @@ class HaikuCompose(MycroftSkill):
 
     @intent_file_handler('haiku.intent')
     def handle_haiku(self, message):
-        self.speak_dialog('haiku')
+        self.speak_dialog(compose_haiku.main())
 
     def stop(self):
         pass

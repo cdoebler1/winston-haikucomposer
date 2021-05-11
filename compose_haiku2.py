@@ -5,7 +5,7 @@ import random
 import json
 from collections import defaultdict
 from generate_corpus_missing_words.count_syllables import count_syllables
-# from string import punctuation
+from string import punctuation
 
 logging.disable(logging.CRITICAL)  # comment-out to enable debugging messages
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
@@ -150,29 +150,86 @@ def haiku_line(suffix_map_1, suffix_map_2, corpus, end_prev_line, target_syls):
 
 
 def main():
+    """Give user choice of building a haiku or modifying an existing haiku."""
+    intro = """\n
+    A thousand monkeys at a thousand typewriters...
+    or one computer...can sometimes produce a haiku.\n"""
+    print("{}".format(intro))
+
     corpus = load_corpus()
     suffix_map_1 = map_word_to_word(corpus)
     suffix_map_2 = map_2_words_to_word(corpus)
     final = []
 
-    # generate a full haiku
-    end_prev_line = []
-    first_line, end_prev_line1 = haiku_line(suffix_map_1, suffix_map_2,
-                                            corpus, end_prev_line, 5)
-    final.append(first_line)
-    line, end_prev_line2 = haiku_line(suffix_map_1, suffix_map_2,
-                                      corpus, end_prev_line1, 7)
-    final.append(line)
-    line, end_prev_line3 = haiku_line(suffix_map_1, suffix_map_2,
-                                      corpus, end_prev_line2, 5)
-    final.append(line)
+    choice = None
+    while choice != "0":
 
-    # display results
-    print()
-    print(' '.join(final[0]), file=sys.stderr)
-    print(' '.join(final[1]), file=sys.stderr)
-    print(' '.join(final[2]), file=sys.stderr)
-    print()
+        print(
+            """
+            Japanese Haiku Generator
+
+            0 - Quit
+            1 - Generate a Haiku poem
+            2 - Regenerate Line 2
+            3 - Regenerate Line 3
+            """
+            )
+
+        choice = input("Choice: ")
+        print()
+
+        # exit
+        if choice == "0":
+            print("Sayonara.")
+            sys.exit()
+
+        # generate a full haiku
+        elif choice == "1":
+            final = []
+            end_prev_line = []
+            first_line, end_prev_line1 = haiku_line(suffix_map_1, suffix_map_2,
+                                                    corpus, end_prev_line, 5)
+            final.append(first_line)
+            line, end_prev_line2 = haiku_line(suffix_map_1, suffix_map_2,
+                                              corpus, end_prev_line1, 7)
+            final.append(line)
+            line, end_prev_line3 = haiku_line(suffix_map_1, suffix_map_2,
+                                              corpus, end_prev_line2, 5)
+            final.append(line)
+
+        # regenerate line 2
+        elif choice == "2":
+            if not final:
+                print("Please generate a full haiku first (Option 1).")
+                continue
+            else:
+                line, end_prev_line2 = haiku_line(suffix_map_1, suffix_map_2,
+                                                  corpus, end_prev_line1, 7)
+                final[1] = line
+
+        # regenerate line 3
+        elif choice == "3":
+            if not final:
+                print("Please generate a full haiku first (Option 1).")
+                continue
+            else:
+                line, end_prev_line3 = haiku_line(suffix_map_1, suffix_map_2,
+                                                  corpus, end_prev_line2, 5)
+                final[2] = line
+
+        # some unknown choice
+        else:
+            print("\nSorry, but that isn't a valid choice.", file=sys.stderr)
+            continue
+
+        # display results
+        print()
+        print("First line =  " + ' '.join(final[0]), file=sys.stderr)
+        print("Second line = " + ' '.join(final[1]), file=sys.stderr)
+        print("Third line =  " + ' '.join(final[2]), file=sys.stderr)
+        print()
+
+    input("\n\nPress the Enter key to exit.")
 
 
 if __name__ == '__main__':
