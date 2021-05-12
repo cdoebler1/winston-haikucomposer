@@ -1,6 +1,6 @@
 from mycroft import MycroftSkill, intent_file_handler
 # import subprocess
-import compose_haiku
+from .compose_haiku import generatehaiku as genHaiku
 
 
 class HaikuCompose(MycroftSkill):
@@ -9,7 +9,13 @@ class HaikuCompose(MycroftSkill):
 
     @intent_file_handler('haiku.intent')
     def handle_haiku(self, message):
-        self.speak_dialog(compose_haiku.main())
+        Haiku = genHaiku()
+        line1 = (' '.join(Haiku[0]))
+        line2 = (' '.join(Haiku[1]))
+        line3 = (' '.join(Haiku[2]))
+        self.speak_dialog(line1)
+        self.speak_dialog(line2)
+        self.speak_dialog(line3)
 
     def stop(self):
         pass

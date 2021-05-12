@@ -3,9 +3,13 @@ import sys
 from string import punctuation
 import json
 from nltk.corpus import cmudict
+import os
 
 # load dictionary of words in haiku corpus but not in cmudict
-with open('generate_corpus_missing_words/missing_words.json') as f:
+script_dir = os.path.dirname(__file__)
+missingwords = os.path.join(script_dir, 'missing_words.json')
+
+with open(missingwords) as f:
     missing_words = json.load(f)
 
 cmudict = cmudict.dict()

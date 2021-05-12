@@ -4,16 +4,22 @@ import logging
 import random
 import json
 from collections import defaultdict
-from generate_corpus_missing_words.count_syllables import count_syllables
+from .generate_corpus_missing_words.count_syllables import count_syllables
+import os
 # from string import punctuation
 
-logging.disable(logging.CRITICAL)  # comment-out to enable debugging messages
+# logging.disable(logging.CRITICAL)  # comment-out to enable debugging messages
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
+def genHaiku():
+    haiku = "Happy Happy"
+    return haiku
 
 def load_corpus():
     """Load the corpus as a string."""
-    with open('generate_corpus_missing_words/corpus.json') as f_obj:
+    script_dir = os.path.dirname(__file__)
+    corpusfile = os.path.join(script_dir, 'generate_corpus_missing_words/corpus.json')
+    with open(corpusfile) as f_obj:
         corpus = json.load(f_obj)
         return corpus
 
@@ -149,7 +155,7 @@ def haiku_line(suffix_map_1, suffix_map_2, corpus, end_prev_line, target_syls):
     return final_line, end_prev_line
 
 
-def main():
+def generatehaiku():
     corpus = load_corpus()
     suffix_map_1 = map_word_to_word(corpus)
     suffix_map_2 = map_2_words_to_word(corpus)
@@ -168,12 +174,22 @@ def main():
     final.append(line)
 
     # display results
+    # print()
+    # print(' '.join(final[0]), file=sys.stderr)
+    # print(' '.join(final[1]), file=sys.stderr)
+    # print(' '.join(final[2]), file=sys.stderr)
+    # print()
+
+    return final
+
+
+if __name__ == '__main__':
+    final = generatehaiku()
     print()
     print(' '.join(final[0]), file=sys.stderr)
     print(' '.join(final[1]), file=sys.stderr)
     print(' '.join(final[2]), file=sys.stderr)
     print()
+    genHaiku = genHaiku()
+    print(genHaiku)
 
-
-if __name__ == '__main__':
-    main()
